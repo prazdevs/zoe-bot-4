@@ -16,8 +16,8 @@ export class Rule {
   publicChan: string;
 
   @Column({ length: 20, nullable: true })
-  modChan: string;
+  modChan?: string;
 
   @Column({ nullable: true })
-  icon: string;
+  icon?: string;
 }
