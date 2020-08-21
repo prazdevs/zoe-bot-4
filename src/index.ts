@@ -1,29 +1,32 @@
 import 'reflect-metadata';
 
-import { addRule, getRules, removeRule } from './actions';
-import { getConnection } from './database';
+import { Client } from 'discord.js';
+import { createConnection } from 'typeorm';
 import { Rule } from './entities/Rule';
-import { getLatestSubmissions } from './fetchReddit';
+import { onMessage } from './handlers';
 
 async function doStuff() {
-  const connection = await getConnection();
-  const rules = await getRules(connection);
-  console.log(rules);
+  const connection = await createConnection({
+    type: 'postgres',
+    url: process.env.POSTGRES_URL,
+    entities: [Rule],
+    synchronize: true,
+    ssl: { rejectUnauthorized: false },
+  });
 
-  await removeRule(connection, '744620155501281421', 'zoemains');
-  const rules2 = await getRules(connection);
-  console.log(rules2);
+  const client = new Client({
+    partials: ['REACTION', 'MESSAGE', 'CHANNEL'],
+  });
 
-  const rule = new Rule();
-  rule.reddit = 'zoemains';
-  rule.guild = '744620155501281421';
-  (rule.modChan = '744620396074238072'),
-    (rule.publicChan = '744620519768326274');
+  client.on('message', async (message) => {
+    await onMessage(message, connection);
+  });
 
-  await addRule(connection, rule);
-  const rules3 = await getRules(connection);
+  client.on('ready', async () => {
+    // await startRoutine(connection, client, 5000);
+  });
 
-  console.log(rules3);
+  await client.login(process.env.DISCORD_TOKEN);
 }
 
 doStuff();

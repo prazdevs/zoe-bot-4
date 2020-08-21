@@ -1,7 +1,12 @@
-import Snoowrap from 'snoowrap';
+import Snoowrap, { Submission } from 'snoowrap';
 import { parse as parseUrl } from 'url';
 
-function getSnoowrap() {
+export interface SubmissionCollection {
+  subreddit: string;
+  submissions: Submission[];
+}
+
+const getSnoowrap = () => {
   return new Snoowrap({
     userAgent: 'zoe-bot',
     clientId: process.env.REDDIT_APP_ID,
@@ -9,9 +14,9 @@ function getSnoowrap() {
     username: process.env.REDDIT_USERNAME,
     password: process.env.REDDIT_PASSWORD,
   });
-}
+};
 
-export async function getIcon(subreddit: string) {
+export const getIcon = async (subreddit: string): Promise<string> => {
   try {
     const snoowrap = getSnoowrap();
     return await snoowrap
@@ -22,16 +27,42 @@ export async function getIcon(subreddit: string) {
         return `https://${parsed.hostname}${parsed.pathname}`;
       });
   } catch (error) {
-    return undefined;
+    return '';
   }
-}
+};
 
-export async function getLatestSubmissions(subreddit: string, limit: number) {
+export const getLatestSubmissions = async (
+  subreddit: string
+): Promise<Submission[]> => {
   const snoowrap = getSnoowrap();
   try {
-    const listing = await snoowrap.getSubreddit(subreddit).getNew({ limit });
+    const listing = await snoowrap.getSubreddit(subreddit).getNew();
     return [...listing];
   } catch (error) {
     return [];
   }
-}
+};
+
+export const getLatestSubmissionsSince = async (
+  subreddit: string,
+  seconds: number
+): Promise<Submission[]> => {
+  const submissions = await getLatestSubmissions(subreddit);
+  return submissions.filter((s) => Date.now() / 1000 - s.created_utc < seconds);
+};
+
+export const getLatestCollectionSince = async (
+  subreddit: string,
+  seconds: number
+): Promise<SubmissionCollection> => {
+  const submissions = await getLatestSubmissionsSince(subreddit, seconds);
+  return { subreddit, submissions };
+};
+
+export const getLatestCollectionsSince = async (
+  subreddits: string[],
+  seconds: number
+): Promise<SubmissionCollection[]> => {
+  const promises = subreddits.map((s) => getLatestCollectionSince(s, seconds));
+  return Promise.all(promises);
+};
