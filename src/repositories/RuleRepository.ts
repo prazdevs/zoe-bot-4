@@ -9,7 +9,13 @@ export class RuleRepository extends Repository<Rule>
     return await this.find();
   }
 
-  async addRule({ guild, reddit, modChan, publicChan, icon }: Rule): Promise<Rule> {
+  async addRule({
+    guild,
+    reddit,
+    modChan,
+    publicChan,
+    icon,
+  }: Rule): Promise<Rule> {
     const rule = new Rule();
     rule.guild = guild;
     rule.reddit = reddit;
