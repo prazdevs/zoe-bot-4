@@ -21,5 +21,5 @@ export function getRuleRepository(): IRuleRepository {
   return _connection.getCustomRepository(RuleRepository);
 }
 
-const client = new DiscordClient();
-client.connect().then(() => console.log('connected'));
+// const client = new DiscordClient();
+//client.connect().then(() => console.log('connected'));

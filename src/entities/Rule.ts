@@ -17,4 +17,7 @@ export class Rule {
 
   @Column({ length: 20, nullable: true })
   modChan: string;
+
+  @Column({ nullable: true })
+  icon: string;
 }
