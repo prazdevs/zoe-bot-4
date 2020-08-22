@@ -19,5 +19,8 @@ export class Rule {
   modChan?: string;
 
   @Column({ nullable: true })
+  automodDelay?: number;
+
+  @Column({ nullable: true })
   icon?: string;
 }

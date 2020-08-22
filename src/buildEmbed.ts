@@ -7,7 +7,7 @@ export const buildEmbed = (
 ): MessageEmbed => {
   const embed = new MessageEmbed();
 
-  embed.setAuthor(submission.author.name);
+  embed.setAuthor(`New post in ${submission.subreddit_name_prefixed}`);
   embed.setTitle(submission.title);
   embed.setURL(`http://reddit.com${submission.permalink}`);
 

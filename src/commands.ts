@@ -9,18 +9,30 @@ export const addRule = async (
   guildId: string,
   reddit: string,
   publicChan: string,
-  modChan: string
+  modChan: string,
+  automodDelay: number | null
 ): Promise<void> => {
   const rule = new Rule();
   rule.guild = guildId;
   rule.reddit = reddit;
   rule.publicChan = publicChan;
   rule.modChan = modChan;
+  if (automodDelay) rule.automodDelay = automodDelay;
 
   rule.icon = await getIcon(reddit);
 
   try {
     await connection.getRepository(Rule).save(rule);
+    const publicC = message.guild?.channels.cache.get(publicChan);
+    let reply = `Added rule for reddit \`${reddit}\` posted in '${publicC}'`;
+    if (rule.modChan) {
+      const modChan = message.guild?.channels.cache.get(rule.modChan);
+      reply += ` modded in ${modChan}.`;
+    }
+    if (rule.automodDelay) {
+      reply += ` Posts will be automodded after ${automodDelay} seconds.`;
+    }
+    await message.channel.send(reply);
   } catch (error) {
     if (error.code === '23505') {
       message.channel.send(`There is already a rule for \`${reddit}\`.`);
@@ -71,10 +83,13 @@ export const getRules = async (
       const reddit = rule.reddit;
       const publicChan = message.guild?.channels.cache.get(rule.publicChan);
 
-      let reply = `Reddit '${reddit}' posted in '${publicChan}'`;
+      let reply = `Reddit '${reddit}' posted in ${publicChan}`;
       if (rule.modChan) {
         const modChan = message.guild?.channels.cache.get(rule.modChan);
-        reply += ` modded in ${modChan}`;
+        reply += ` modded in ${modChan}.`;
+      }
+      if (rule.automodDelay) {
+        reply += ` Posts are automodded after ${rule.automodDelay} seconds.`;
       }
       await message.channel.send(reply);
     });

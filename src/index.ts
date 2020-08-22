@@ -20,7 +20,7 @@ async function doStuff() {
   });
 
   client.on('message', async (message) => {
-    await onMessage(message, connection);
+    await onMessage(message, connection, client);
   });
 
   client.on('ready', async () => {

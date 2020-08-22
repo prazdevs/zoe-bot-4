@@ -31,6 +31,28 @@ export const getIcon = async (subreddit: string): Promise<string> => {
   }
 };
 
+export const getSubmissionOk = async (
+  url: string | undefined
+): Promise<boolean> => {
+  const snoowrap = getSnoowrap();
+  if (!url) return false;
+
+  const id = parseUrl(url).pathname?.split('/')[4];
+  if (!id) return false;
+
+  try {
+    return await snoowrap
+      .getSubmission(id)
+      .fetch()
+      .then((s) => {
+        return s.selftext !== '[deleted]' && s.selftext !== '[removed]';
+      });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 export const getLatestSubmissions = async (
   subreddit: string
 ): Promise<Submission[]> => {
