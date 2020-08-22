@@ -9,7 +9,7 @@ import { startRoutine } from './routine';
 async function doStuff() {
   const connection = await createConnection({
     type: 'postgres',
-    url: process.env.POSTGRES_URL,
+    url: process.env.DATABASE_URL,
     entities: [Rule],
     synchronize: true,
     ssl: { rejectUnauthorized: false },
