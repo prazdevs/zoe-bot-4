@@ -24,7 +24,12 @@ export const onMessage = async (
   const [command, ...args] = content.split(' ').map((i) => i.trim());
 
   if (command === 'add') {
-    const [reddit, publicChan, modChan, delay] = args;
+    const [reddit, publicChanTag, modChanTag, delay] = args;
+
+    // parse ids from mentions
+    const [publicChan, modChan] = [publicChanTag, modChanTag].map((tag) =>
+      tag.replace(/[<>#]/g, '')
+    );
 
     // compulsory arguments
     if (!reddit || !publicChan) {

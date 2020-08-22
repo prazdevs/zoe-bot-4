@@ -8,4 +8,7 @@ declare namespace NodeJS {
     REDDIT_APP_SECRET: string;
   }
 }
+
+// fix for type error in snoowrap
+// eslint-disable-next-line
 import ReadableStream = NodeJS.ReadableStream;
