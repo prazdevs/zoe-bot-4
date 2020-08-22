@@ -26,21 +26,25 @@ export const onMessage = async (
   if (command === 'add') {
     const [reddit, publicChanTag, modChanTag, delay] = args;
 
-    // parse ids from mentions
-    const [publicChan, modChan] = [publicChanTag, modChanTag].map((tag) =>
-      tag.replace(/[<>#]/g, '')
-    );
-
     // compulsory arguments
-    if (!reddit || !publicChan) {
+    if (!reddit || !publicChanTag) {
       await message.channel.send('Invalid command, missing arguments.');
       return;
     }
+
+    // parse id from mention
+    const publicChan = publicChanTag.replace(/[<>#]/g, '');
 
     // public channel must be valid text channel
     if (!channelExists(message, publicChan)) {
       message.channel.send(`Channel ${publicChan} is invalid.`);
       return;
+    }
+
+    // parse id from mention
+    let modChan = '';
+    if (modChanTag) {
+      modChan = modChanTag.replace(/[<>#]/g, '');
     }
 
     // mod channel must be valid text channel
