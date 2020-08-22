@@ -4,6 +4,7 @@ import { Client } from 'discord.js';
 import { createConnection } from 'typeorm';
 import { Rule } from './entities/Rule';
 import { onMessage } from './handlers';
+import { startRoutine } from './routine';
 
 async function doStuff() {
   const connection = await createConnection({
@@ -23,7 +24,7 @@ async function doStuff() {
   });
 
   client.on('ready', async () => {
-    // await startRoutine(connection, client, 5000);
+    await startRoutine(connection, client, 300);
   });
 
   await client.login(process.env.DISCORD_TOKEN);
