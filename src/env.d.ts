@@ -8,3 +8,4 @@ declare namespace NodeJS {
     REDDIT_APP_SECRET: string;
   }
 }
+import ReadableStream = NodeJS.ReadableStream;
