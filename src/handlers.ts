@@ -121,7 +121,9 @@ export const onMessage = async (
   } else if (command == 'get') {
     await getRules(connection, message, message.guild.id);
   } else if (command == 'help') {
-    await message.channel.send(`Help coming soon. Ask me instead for now.`);
+    await message.channel.send(
+      `You will find help at https://zoe-bot-docs.vercel.app/guide`
+    );
   }
 };
 
