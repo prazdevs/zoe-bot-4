@@ -23,7 +23,7 @@ export const buildEmbed = (
   embed.setThumbnail(redditIcon);
 
   embed.setFooter(
-    `Posted by u/${submission.author.name}`,
+    `by u/${submission.author.name}`,
     'https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png'
   );
 
