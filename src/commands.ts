@@ -19,7 +19,13 @@ export const addRule = async (
   rule.modChan = modChan;
   if (automodDelay) rule.automodDelay = automodDelay;
 
-  rule.icon = await getIcon(reddit);
+  try {
+    rule.icon = await getIcon(reddit);
+  } catch (error) {
+    message.channel.send(
+      `Could not reach r/${reddit}. Maybe it doesn't exist, or there is a problem with the server.`
+    );
+  }
 
   try {
     await connection.getRepository(Rule).save(rule);
