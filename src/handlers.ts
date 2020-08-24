@@ -23,7 +23,7 @@ export const onMessage = async (
   const content = message.content.slice(2);
   const [command, ...args] = content.split(' ').map((i) => i.trim());
 
-  if (command === 'add') {
+  if (command == 'add') {
     const [reddit, publicChanTag, modChanTag, delay] = args;
 
     // compulsory arguments
@@ -114,12 +114,14 @@ export const onMessage = async (
       modChan,
       automodDelay
     );
-  } else if (command === 'remove') {
+  } else if (command == 'remove') {
     const [reddit] = args;
     if (!reddit) return;
     await removeRule(connection, message, message.guild.id, reddit);
-  } else if (command === 'get') {
+  } else if (command == 'get') {
     await getRules(connection, message, message.guild.id);
+  } else if (command == 'help') {
+    await message.channel.send(`Help coming soon. Ask me instead for now.`);
   }
 };
 
