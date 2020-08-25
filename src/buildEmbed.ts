@@ -15,7 +15,6 @@ export const buildEmbed = (
     embed.setDescription(submission.selftext);
   } else if (submission.media) {
     embed.setImage(submission.thumbnail);
-    embed.setDescription('This post contains media...');
   } else {
     embed.setImage(submission.url);
   }
