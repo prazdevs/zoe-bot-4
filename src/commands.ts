@@ -108,4 +108,5 @@ const buildRulePrint = (
   if (automodDelay) {
     reply += ` Posts will be automodded after ${automodDelay} seconds.`;
   }
+  return reply;
 };
