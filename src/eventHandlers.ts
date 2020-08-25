@@ -14,7 +14,7 @@ export const onMessage = async (
   message: Message,
   connection: Connection,
   clientUser: User
-) => {
+): Promise<void> => {
   if (!message.guild) return;
   if (!canHandleMessage(message)) return;
   const args = parseArguments(message.content);
@@ -48,9 +48,11 @@ export const onMessage = async (
 
 const canHandleMessage = (message: Message): boolean => {
   return !!(
-    !message.author.bot &&
-    message.member?.hasPermission('ADMINISTRATOR') &&
-    message.content.startsWith('ref!') //TODO CHANGE THAT!
+    (
+      !message.author.bot &&
+      message.member?.hasPermission('ADMINISTRATOR') &&
+      message.content.startsWith('ref!')
+    ) //TODO CHANGE THAT!
   );
 };
 
@@ -70,8 +72,8 @@ const hasPermissionsInChannel = (
   client: User,
   guild: Guild,
   channelId: string
-) => {
-  return guild.channels.cache
+): boolean => {
+  return !!guild.channels.cache
     .get(channelId)
     ?.permissionsFor(client)
     ?.has([
