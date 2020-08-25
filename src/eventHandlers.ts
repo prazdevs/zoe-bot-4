@@ -18,29 +18,8 @@ export const onMessage = async (
   if (!message.guild) return;
   if (!canHandleMessage(message)) return;
   const args = parseArguments(message.content);
-
   try {
-    if (args.command == 'add') {
-      validateAddArguments(args, clientUser, message.guild);
-      await addRule(
-        connection,
-        message,
-        message.guild.id,
-        args.reddit,
-        args.publicChan,
-        args.modChan,
-        args.automodDelay
-      );
-    } else if (args.command == 'remove') {
-      validateRemoveArguments(args);
-      await removeRule(connection, message, message.guild.id, args.reddit);
-    } else if (args.command == 'get') {
-      await getRules(connection, message, message.guild.id);
-    } else if (args.command == 'help') {
-      await message.channel.send(`Help coming soon. Ask me instead for now.`);
-    } else {
-      throw new Error(`Unnown command. \`z!help\` for help.`);
-    }
+    await executeCommand(message, connection, clientUser, args);
   } catch (error) {
     await message.channel.send(error.message);
   }
@@ -48,11 +27,9 @@ export const onMessage = async (
 
 const canHandleMessage = (message: Message): boolean => {
   return !!(
-    (
-      !message.author.bot &&
-      message.member?.hasPermission('ADMINISTRATOR') &&
-      message.content.startsWith('z!')
-    )
+    !message.author.bot &&
+    message.member?.hasPermission('ADMINISTRATOR') &&
+    message.content.startsWith('z!')
   );
 };
 
@@ -66,6 +43,35 @@ const parseArguments = (messageContent: string): Arguments => {
     modChan: args[3]?.replace(/[<>#]/g, ''),
     automodDelay: parseInt(args[4]) || null,
   };
+};
+
+const executeCommand = async (
+  message: Message,
+  connection: Connection,
+  clientUser: User,
+  args: Arguments
+) => {
+  if (!message.guild) return;
+  if (args.command == 'add') {
+    validateAddArguments(args, clientUser, message.guild);
+    await addRule(
+      connection,
+      message,
+      message.guild.id,
+      args.reddit,
+      args.publicChan,
+      args.modChan,
+      args.automodDelay
+    );
+  } else if (args.command == 'remove') {
+    validateRemoveArguments(args);
+    await removeRule(connection, message, message.guild.id, args.reddit);
+  } else if (args.command == 'get') {
+    await getRules(connection, message, message.guild.id);
+  } else if (args.command == 'help') {
+    await message.channel.send(`Help coming soon. Ask me instead for now.`);
+  }
+  throw new Error(`Unnown command. \`z!help\` for help.`);
 };
 
 const hasPermissionsInChannel = (
