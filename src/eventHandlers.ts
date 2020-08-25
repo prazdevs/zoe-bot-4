@@ -70,8 +70,9 @@ const executeCommand = async (
     await getRules(connection, message, message.guild.id);
   } else if (args.command == 'help') {
     await message.channel.send(`Help coming soon. Ask me instead for now.`);
+  } else {
+    throw new Error(`Unnown command. \`z!help\` for help.`);
   }
-  throw new Error(`Unnown command. \`z!help\` for help.`);
 };
 
 const hasPermissionsInChannel = (
