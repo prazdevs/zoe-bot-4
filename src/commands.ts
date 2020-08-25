@@ -30,7 +30,7 @@ export const addRule = async (
       modChan,
       automodDelay
     );
-    await message.channel.send(reply);
+    await message.channel.send(`Added: ${reply}`);
   } catch (error) {
     if (error.code === '23505') {
       throw new Error(`There is already a rule for \`${reddit}\`.`);
@@ -100,7 +100,7 @@ const buildRulePrint = (
   automodDelay: number | null | undefined
 ) => {
   const publicChan = message.guild?.channels.cache.get(publicChanId);
-  let reply = `Added rule for reddit \`${reddit}\` posted in '${publicChan}'`;
+  let reply = `reddit \`${reddit}\` posted in '${publicChan}'`;
   if (modChanId) {
     const modChan = message.guild?.channels.cache.get(modChanId);
     reply += ` modded in ${modChan}.`;
