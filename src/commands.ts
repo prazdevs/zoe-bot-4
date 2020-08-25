@@ -23,23 +23,20 @@ export const addRule = async (
 
   try {
     await connection.getRepository(Rule).save(rule);
-    const publicC = message.guild?.channels.cache.get(publicChan);
-    let reply = `Added rule for reddit \`${reddit}\` posted in '${publicC}'`;
-    if (rule.modChan) {
-      const modChan = message.guild?.channels.cache.get(rule.modChan);
-      reply += ` modded in ${modChan}.`;
-    }
-    if (rule.automodDelay) {
-      reply += ` Posts will be automodded after ${automodDelay} seconds.`;
-    }
+    const reply = buildRulePrint(
+      message,
+      reddit,
+      publicChan,
+      modChan,
+      automodDelay
+    );
     await message.channel.send(reply);
   } catch (error) {
     if (error.code === '23505') {
-      message.channel.send(`There is already a rule for \`${reddit}\`.`);
-    } else {
-      message.channel.send(`Failed to add a rule due to internal error.`);
-      console.error(error);
+      throw new Error(`There is already a rule for \`${reddit}\`.`);
     }
+    console.error(error);
+    throw new Error(`Failed to add a rule due to internal error.`);
   }
 };
 
@@ -80,21 +77,36 @@ export const getRules = async (
     }
 
     rules.forEach(async (rule) => {
-      const reddit = rule.reddit;
-      const publicChan = message.guild?.channels.cache.get(rule.publicChan);
-
-      let reply = `Reddit '${reddit}' posted in ${publicChan}`;
-      if (rule.modChan) {
-        const modChan = message.guild?.channels.cache.get(rule.modChan);
-        reply += ` modded in ${modChan}.`;
-      }
-      if (rule.automodDelay) {
-        reply += ` Posts are automodded after ${rule.automodDelay} seconds.`;
-      }
+      const reply = buildRulePrint(
+        message,
+        rule.reddit,
+        rule.publicChan,
+        rule.modChan,
+        rule.automodDelay
+      );
       await message.channel.send(reply);
     });
   } catch (error) {
     await message.channel.send(`Could not fetch rules due to internal error.`);
     console.error(error);
   }
+};
+
+const buildRulePrint = (
+  message: Message,
+  reddit: string,
+  publicChanId: string,
+  modChanId: string | undefined,
+  automodDelay: number | null | undefined
+) => {
+  const publicChan = message.guild?.channels.cache.get(publicChanId);
+  let reply = `Added rule for reddit \`${reddit}\` posted in '${publicChan}'`;
+  if (modChanId) {
+    const modChan = message.guild?.channels.cache.get(modChanId);
+    reply += ` modded in ${modChan}.`;
+  }
+  if (automodDelay) {
+    reply += ` Posts will be automodded after ${automodDelay} seconds.`;
+  }
+  return reply;
 };

@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { Client } from 'discord.js';
 import { createConnection } from 'typeorm';
 import { Rule } from './entities/Rule';
-import { onMessage } from './handlers';
+import { onMessage } from './eventHandlers';
 import { startRoutine } from './routine';
 
 async function doStuff() {
@@ -20,7 +20,8 @@ async function doStuff() {
   });
 
   client.on('message', async (message) => {
-    await onMessage(message, connection, client);
+    if (!client.user) return;
+    await onMessage(message, connection, client.user);
   });
 
   client.on('ready', async () => {

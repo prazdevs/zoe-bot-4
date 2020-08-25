@@ -17,18 +17,14 @@ const getSnoowrap = () => {
 };
 
 export const getIcon = async (subreddit: string): Promise<string> => {
-  try {
-    const snoowrap = getSnoowrap();
-    return await snoowrap
-      .getSubreddit(subreddit)
-      .fetch()
-      .then((s) => {
-        const parsed = parseUrl(s.community_icon);
-        return `https://${parsed.hostname}${parsed.pathname}`;
-      });
-  } catch (error) {
-    return '';
-  }
+  const snoowrap = getSnoowrap();
+  return await snoowrap
+    .getSubreddit(subreddit)
+    .fetch()
+    .then((s) => {
+      const parsed = parseUrl(s.community_icon);
+      return `https://${parsed.hostname}${parsed.pathname}`;
+    });
 };
 
 export const getSubmissionOk = async (
