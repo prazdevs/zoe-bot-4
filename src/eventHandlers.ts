@@ -51,13 +51,13 @@ const canHandleMessage = (message: Message): boolean => {
     (
       !message.author.bot &&
       message.member?.hasPermission('ADMINISTRATOR') &&
-      message.content.startsWith('ref!')
-    ) //TODO CHANGE THAT!
+      message.content.startsWith('z!')
+    )
   );
 };
 
 const parseArguments = (messageContent: string): Arguments => {
-  const content = messageContent.slice(4); //TODO CHANGE THAT TOO
+  const content = messageContent.slice(2);
   const args = content.split(' ').map((i) => i.trim());
   return {
     command: args[0],
