@@ -20,7 +20,7 @@
   </a>
 </p>
 
-## Prerequisites
+## 🧱 Prerequisites
 
 To run your instance of the bot, you will need:
 
@@ -28,7 +28,7 @@ To run your instance of the bot, you will need:
 - a Reddit app with client id and secret. Get it [here](https://discord.com/developers/applications).
 - a Postgres database and its connection URL.
 
-## Installation
+## 🔨 Installation
 
 1. Install dependencies: `yarn`.
 2. Build the solution: `yarn build`.
