@@ -33,9 +33,7 @@ To run your instance of the bot, you will need:
 
 Click on the button:
 
-<a href="https://heroku.com/deploy?template=https://github.com/prazdevs/zoe-bot-4" target="_blank">
-  <img src="https://www.herokucdn.com/deploy/button.svg" alt="deploy to heroku" />
-</a>
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/prazdevs/zoe-bot-4)
 
 Note: it will provision a free tier worker dyno and a free tier postgres add-on.
 
@@ -64,7 +62,7 @@ Want to add some feature? PRs are welcome!
 
 Feel free to contact me:
 
-- <a href="https://twitter.com/prazdevs" target="_blank"><img src="https://img.shields.io/twitter/follow/prazdevs?style=social" /><a/>
+- <a href="https://twitter.com/prazdevs"><img src="https://img.shields.io/twitter/follow/prazdevs?style=social" /><a/>
 - <img src="https://img.shields.io/badge/Discord-PraZ%234184-darkgrey?labelColor=7289DA&logo=discord&logoColor=white" />
 
 ## 📝 Licence
