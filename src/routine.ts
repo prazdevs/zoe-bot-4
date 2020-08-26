@@ -25,7 +25,11 @@ export const startRoutine = async (
     const subreddits = [...new Set(rules.map((r) => r.reddit))];
     const collections = await getLatestCollectionsSince(subreddits, delay);
     rules.forEach((rule) => {
-      processRule(rule, client, collections);
+      try {
+        processRule(rule, client, collections);
+      } catch (error) {
+        console.error(`Failed to execute rule ${rule.reddit} ${rule.guild}`);
+      }
     });
   };
   await routine();
