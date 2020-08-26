@@ -1,5 +1,7 @@
 <p align="center">
   <img src="https://zoe-bot-docs.vercel.app/zoe.png">
+</p>
+<p align="center">
   <i>Artwork by <a href="https://twitter.com/q_hush">Quiet Hush</a></i>
 </p>
 
