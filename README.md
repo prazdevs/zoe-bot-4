@@ -29,7 +29,17 @@ To run your instance of the bot, you will need:
 - a Reddit app with client id and secret. Get it [here](https://discord.com/developers/applications).
 - a Postgres database and its connection URL.
 
-## 🔨 Installation
+## 🚀 Easy deployment on Heroku
+
+Click on the button:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/prazdevs/zoe-bot-4)
+
+Note: it will provision a free tier worker dyno and a free tier postgres add-on.
+
+## 🔨 Manual installation
+
+Follow the steps:
 
 1. Install dependencies: `yarn`.
 2. Build the solution: `yarn build`.
