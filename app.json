@@ -1,0 +1,46 @@
+{
+  "name": "Zoe Bot 4",
+
+  "description": "A whimsical bot to automatically post Reddit submissions to Discord, with moderation features.",
+
+  "keywords": ["discord", "bot", "reddit"],
+
+  "logo": "https://zoe-bot-docs.vercel.app/zoebot.png",
+
+  "success_url": "https://zoe-bot-docs.vercel.app/",
+
+  "repository": "https://github.com/prazdevs/zoe-bot-4",
+
+  "addons": ["heroku-postgresql:hobby-dev"],
+
+  "env": {
+    "DISCORD_TOKEN": {
+      "description": "Your Discord bot token"
+    },
+    "REDDIT_APP_ID": {
+      "description": "Reddit app client id"
+    },
+    "REDDIT_APP_SECRET": {
+      "description": "Reddit app client secret"
+    },
+    "REDDIT_USERNAME": {
+      "description": "Reddit username"
+    },
+    "REDDIT_PASSWORD": {
+      "description": "Reddit password"
+    }
+  },
+
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    }
+  ]
+}
