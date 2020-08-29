@@ -25,6 +25,10 @@ async function doStuff() {
   });
 
   client.on('ready', async () => {
+    await client.user?.setActivity({
+      type: 'WATCHING',
+      name: "r/zoemains, there are so many weirdos here... It's awesome!",
+    });
     await startRoutine(connection, client, 300);
   });
 
