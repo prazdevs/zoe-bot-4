@@ -21,6 +21,6 @@ export class Rule {
   @Column({ nullable: true })
   automodDelay?: number;
 
-  @Column({ nullable: true })
-  icon?: string;
+  @Column()
+  icon: string;
 }
