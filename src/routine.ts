@@ -50,28 +50,32 @@ const processRule = (
   const submissions =
     collections.find((c) => c.subreddit === rule.reddit)?.submissions ?? [];
   submissions?.forEach(async (s) => {
-    const embed = buildEmbed(s, rule.icon || '');
-    if (modChannel) {
-      const message = await modChannel.send(embed);
-      await Promise.all([message.react('✅'), message.react('❌')]);
-      const filter = (reaction: MessageReaction, user: User) =>
-        ['✅', '❌'].includes(reaction.emoji.name) &&
-        message.author.id !== user.id;
-      const collector = message.createReactionCollector(filter, {
-        max: 1,
-        time: rule.automodDelay ? rule.automodDelay * 1000 : undefined,
-      });
-      collector.on('end', async (collected, reason) => {
-        await handleCollectorEnd(
-          collected,
-          reason,
-          client,
-          message,
-          publicChannel
-        );
-      });
-    } else {
-      await publicChannel.send(embed);
+    try {
+      const embed = buildEmbed(s, rule.icon || '');
+      if (modChannel) {
+        const message = await modChannel.send(embed);
+        await Promise.all([message.react('✅'), message.react('❌')]);
+        const filter = (reaction: MessageReaction, user: User) =>
+          ['✅', '❌'].includes(reaction.emoji.name) &&
+          message.author.id !== user.id;
+        const collector = message.createReactionCollector(filter, {
+          max: 1,
+          time: rule.automodDelay ? rule.automodDelay * 1000 : undefined,
+        });
+        collector.on('end', async (collected, reason) => {
+          await handleCollectorEnd(
+            collected,
+            reason,
+            client,
+            message,
+            publicChannel
+          );
+        });
+      } else {
+        await publicChannel.send(embed);
+      }
+    } catch (error) {
+      console.error('Failed to post a submission.', error);
     }
   });
 };
