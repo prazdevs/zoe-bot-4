@@ -40,6 +40,7 @@ export const getSubmissionOk = async (
     return await snoowrap
       .getSubmission(id)
       .fetch()
+      // eslint-disable-next-line
       .then((s: any) => !!s.removed_by_category);
   } catch (error) {
     console.error(error);
