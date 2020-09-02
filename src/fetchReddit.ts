@@ -41,7 +41,7 @@ export const getSubmissionOk = async (
       .getSubmission(id)
       .fetch()
       // eslint-disable-next-line
-      .then((s: any) => !!s.removed_by_category);
+      .then((s: any) => !!!s.removed_by_category);
   } catch (error) {
     console.error(error);
     return false;
