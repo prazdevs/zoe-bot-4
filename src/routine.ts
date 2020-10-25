@@ -104,7 +104,7 @@ const handleCollectorEnd = async (
       await modReject(message, user);
     }
   } else if (reason === 'time') {
-    await autoMod(message, client, publicChannel);
+    await autoMod(message, client, publicChannel, postUrl);
   }
 };
 
@@ -134,7 +134,8 @@ const modReject = async (message: Message, user: User | undefined) => {
 const autoMod = async (
   message: Message,
   client: Client,
-  publicChannel: TextChannel
+  publicChannel: TextChannel,
+  postUrl: string | undefined
 ) => {
   const url = message.embeds[0].url;
   const ok = await getSubmissionOk(url);
@@ -145,6 +146,7 @@ const autoMod = async (
     await message.edit(`\`✅ ACCEPTED\` by ${client.user} (automodded)`, embed);
     embed.setColor('#805AD5');
     await publicChannel.send(embed);
+    if (postUrl) postToUrl(embed, postUrl);
     await message.reactions.removeAll();
   } else {
     const embed = message.embeds[0];
