@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.6.0",
+    "@types/node-fetch": "^2.5.7",
     "@types/request": "^2.48.5",
     "@types/ws": "^7.2.6",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "discord.js": "^12.3.1",
+    "node-fetch": "^2.6.1",
     "pg": "^8.3.2",
     "reflect-metadata": "^0.1.13",
     "snoowrap": "^1.21.0",
