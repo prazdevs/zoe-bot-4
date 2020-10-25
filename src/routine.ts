@@ -1,4 +1,5 @@
 import { Connection } from 'typeorm';
+import fetch from 'node-fetch';
 import {
   Client,
   TextChannel,
@@ -6,6 +7,7 @@ import {
   User,
   Collection,
   Message,
+  MessageEmbed,
 } from 'discord.js';
 import { Rule } from './entities/Rule';
 import {
@@ -68,11 +70,13 @@ const processRule = (
             reason,
             client,
             message,
-            publicChannel
+            publicChannel,
+            rule.postUrl
           );
         });
       } else {
         await publicChannel.send(embed);
+        if (rule.postUrl) postToUrl(embed, rule.postUrl); // do not await
       }
     } catch (error) {
       console.error('Failed to post a submission.', error);
@@ -85,7 +89,8 @@ const handleCollectorEnd = async (
   reason: string,
   client: Client,
   message: Message,
-  publicChannel: TextChannel
+  publicChannel: TextChannel,
+  postUrl: string | undefined
 ) => {
   const reaction = collected.first();
   if (reaction) {
@@ -94,7 +99,7 @@ const handleCollectorEnd = async (
       (user) => user.id !== client.user?.id
     );
     if (emoji == '✅') {
-      await modAccept(message, user, publicChannel);
+      await modAccept(message, user, publicChannel, postUrl);
     } else if (emoji === '❌') {
       await modReject(message, user);
     }
@@ -106,7 +111,8 @@ const handleCollectorEnd = async (
 const modAccept = async (
   message: Message,
   user: User | undefined,
-  publicChannel: TextChannel
+  publicChannel: TextChannel,
+  postUrl: string | undefined
 ) => {
   const embed = message.embeds[0];
   embed.setColor('#38A169');
@@ -114,6 +120,7 @@ const modAccept = async (
   await message.edit(`\`✅ ACCEPTED\` by ${user ?? 'unknown'}`, embed);
   embed.setColor('#805AD5');
   await publicChannel.send(embed);
+  if (postUrl) postToUrl(embed, postUrl);
   await message.reactions.removeAll();
 };
 
@@ -144,5 +151,20 @@ const autoMod = async (
     embed.setColor('#E53E3E');
     await message.edit(`\`❌ REJECTED\` by ${client.user} (automodded)`, embed);
     await message.reactions.removeAll();
+  }
+};
+
+const postToUrl = async (embed: MessageEmbed, url: string) => {
+  try {
+    const postTitle =
+      embed.title?.length ?? 0 < 100
+        ? embed.title
+        : `${embed.title?.substring(0, 100)}`;
+    const message = `${postTitle}\n\n${embed.footer?.text}\n\n${embed.url}`;
+    const body = JSON.stringify({ message });
+
+    await fetch(url, { body, method: 'POST' });
+  } catch (error) {
+    // do nothing
   }
 };
