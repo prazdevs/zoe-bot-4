@@ -167,6 +167,6 @@ const postToUrl = async (embed: MessageEmbed, url: string) => {
 
     await fetch(url, { body, method: 'POST' });
   } catch (error) {
-    // do nothing
+    console.error(error);
   }
 };
