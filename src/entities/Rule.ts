@@ -21,6 +21,9 @@ export class Rule {
   @Column({ nullable: true })
   automodDelay?: number;
 
+  @Column({ nullable: true })
+  postUrl?: string;
+
   @Column()
   icon: string;
 }

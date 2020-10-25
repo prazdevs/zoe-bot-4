@@ -1,6 +1,6 @@
 import { Message, User, Guild } from 'discord.js';
 import { Connection } from 'typeorm';
-import { addRule, removeRule, getRules } from './commands';
+import { addRule, removeRule, getRules, changeRulePost } from './commands';
 
 interface Arguments {
   command: string;
@@ -8,6 +8,7 @@ interface Arguments {
   publicChan: string;
   modChan: string;
   automodDelay: number | null;
+  post: string;
 }
 
 export const onMessage = async (
@@ -42,6 +43,7 @@ const parseArguments = (messageContent: string): Arguments => {
     publicChan: args[2] && args[2]?.replace(/[<>#]/g, ''),
     modChan: args[3]?.replace(/[<>#]/g, ''),
     automodDelay: parseInt(args[4]) || null,
+    post: args[2],
   };
 };
 
@@ -68,6 +70,15 @@ const executeCommand = async (
     await removeRule(connection, message, message.guild.id, args.reddit);
   } else if (args.command == 'get') {
     await getRules(connection, message, message.guild.id);
+  } else if (args.command == 'post') {
+    validatePostArguments(args);
+    await changeRulePost(
+      connection,
+      message,
+      message.guild.id,
+      args.reddit,
+      args.post
+    );
   } else if (args.command == 'help') {
     await message.channel.send(`Help coming soon. Ask me instead for now.`);
   } else {
@@ -106,6 +117,10 @@ const validateAddArguments = (
     throw new Error('Insufficient permissions for public channel');
   if (args.modChan && !hasPermissionsInChannel(client, guild, args.modChan))
     throw new Error('Insufficient permissions for mod channel');
+};
+
+const validatePostArguments = (args: Arguments) => {
+  if (!args.reddit) throw new Error('Invalid command: missing subreddit');
 };
 
 const validateRemoveArguments = (args: Arguments) => {

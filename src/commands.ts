@@ -28,7 +28,8 @@ export const addRule = async (
       reddit,
       publicChan,
       modChan,
-      automodDelay
+      automodDelay,
+      false
     );
     await message.channel.send(`Added: ${reply}`);
   } catch (error) {
@@ -82,7 +83,8 @@ export const getRules = async (
         rule.reddit,
         rule.publicChan,
         rule.modChan,
-        rule.automodDelay
+        rule.automodDelay,
+        !!rule.postUrl
       );
       await message.channel.send(reply);
     });
@@ -92,12 +94,41 @@ export const getRules = async (
   }
 };
 
+export const changeRulePost = async (
+  connection: Connection,
+  message: Message,
+  guildId: string,
+  reddit: string,
+  postUrl: string | null
+): Promise<void> => {
+  try {
+    const rule = await connection
+      .getRepository(Rule)
+      .findOne({ guild: guildId, reddit });
+    if (!rule) {
+      await message.channel.send(`No rule found for \`${reddit}\`.`);
+      return;
+    }
+    rule.postUrl = postUrl ?? '';
+    await connection.getRepository(Rule).save(rule);
+    await message.channel.send(
+      `Updated rule for \`${reddit}\` with post \`${postUrl}\`.`
+    );
+  } catch (error) {
+    await message.channel.send(
+      `Failed to edit post for \`${reddit}\` because of an internal error.`
+    );
+    console.error(error);
+  }
+};
+
 const buildRulePrint = (
   message: Message,
   reddit: string,
   publicChanId: string,
   modChanId: string | undefined,
-  automodDelay: number | null | undefined
+  automodDelay: number | null | undefined,
+  post: boolean
 ) => {
   const publicChan = message.guild?.channels.cache.get(publicChanId);
   let reply = `reddit \`${reddit}\` posted in '${publicChan}'`;
@@ -107,6 +138,9 @@ const buildRulePrint = (
   }
   if (automodDelay) {
     reply += ` Posts will be automodded after ${automodDelay} seconds.`;
+  }
+  if (post) {
+    reply += ' There is a post action on this rule.';
   }
   return reply;
 };
