@@ -156,7 +156,14 @@ const autoMod = async (
 
 const postToUrl = async (embed: MessageEmbed, url: string) => {
   try {
-    await fetch(url, { body: JSON.stringify(embed), method: 'POST' });
+    const postTitle =
+      embed.title?.length ?? 0 < 100
+        ? embed.title
+        : `${embed.title?.substring(0, 100)}`;
+    const message = `${postTitle}\n\n${embed.footer?.text}\n\n${embed.url}`;
+    const body = JSON.stringify({ message });
+
+    await fetch(url, { body, method: 'POST' });
   } catch (error) {
     // do nothing
   }
