@@ -165,7 +165,11 @@ const postToUrl = async (embed: MessageEmbed, url: string) => {
     const message = `${postTitle}\n\n${embed.footer?.text}\n\n${embed.url}`;
     const body = JSON.stringify({ message });
 
-    await fetch(url, { body, method: 'POST' });
+    await fetch(url, {
+      body,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error(error);
   }
