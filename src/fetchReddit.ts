@@ -27,9 +27,7 @@ export const getIcon = async (subreddit: string): Promise<string> => {
     });
 };
 
-export const getSubmissionOk = async (
-  url: string | undefined
-): Promise<boolean> => {
+export const getSubmissionOk = async (url: string | null): Promise<boolean> => {
   const snoowrap = getSnoowrap();
   if (!url) return false;
 
@@ -40,8 +38,7 @@ export const getSubmissionOk = async (
     return await snoowrap
       .getSubmission(id)
       .fetch()
-      // eslint-disable-next-line
-      .then((s: any) => !!!s.removed_by_category);
+      .then((s) => !s.removed_by_category);
   } catch (error) {
     console.error(error);
     return false;
